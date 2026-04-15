@@ -49,3 +49,10 @@ jobs:
           image-ref: 'flask-app:${{ github.sha }}'
           format: 'table'
           severity: 'CRITICAL,HIGH'
+
+      # PARTIE 4 : Vérification de la politique de sécurité (Conftest)
+      - name: Run Conftest check
+        uses: open-policy-agent/conftest-action@master
+        with:
+          files: k8s/deployment.yaml
+          policy: policy/app_policy.rego
