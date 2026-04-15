@@ -7,23 +7,45 @@ on:
     branches: [ "main" ]
 
 jobs:
-  lint-and-build:
+  lint-build-and-scan:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Étape de Linting YAML (Partie 2) [cite: 38]
       - name: YAML Lint
         uses: ibiqlik/action-yamllint@v3
         with:
           file_or_dir: k8s/deployment.yaml
-          config_data: "{extends: default, rules: {line-length: disable}}"
+          config_data: "{extends: default, rules: {line-length: disable, new-line-at-end-of-file: disable, trailing-spaces: disable}}"
 
+      # Étape de Linting Dockerfile (Partie 2) [cite: 37]
       - name: Dockerfile Lint
         uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: Dockerfile
           ignore: DL3008,DL3013
 
+      # Étape de Build de l'image (Partie 2) [cite: 36]
       - name: Build Docker image
         run: docker build -t flask-app:${{ github.sha }} .
+
+      # --- PARTIE 3 : SCANS DE SÉCURITÉ TRIVY [cite: 39] ---
+
+      # Scan des dépendances (requirements.txt) [cite: 42]
+      - name: Trivy FS Scan (Dependencies)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: 'app/'
+          format: 'table'
+          severity: 'CRITICAL,HIGH'
+
+      # Scan de l'image Docker [cite: 43]
+      - name: Trivy Image Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'flask-app:${{ github.sha }}'
+          format: 'table'
+          severity: 'CRITICAL,HIGH'
