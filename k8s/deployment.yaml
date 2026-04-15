@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -13,9 +14,7 @@ spec:
         app: flask
     spec:
       containers:
-      - name: flask-app
-        image: flask-app:latest
-        ports:
-        - containerPort: 5000
-        # On laisse volontairement sans "securityContext" pour qu'on trouve une erreur
-        
+        - name: flask-app
+          image: flask-app:latest
+          ports:
+            - containerPort: 5000
