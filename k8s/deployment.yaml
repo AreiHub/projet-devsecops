@@ -18,4 +18,3 @@ spec:
           image: flask-app:latest
           ports:
             - containerPort: 5000
-            
