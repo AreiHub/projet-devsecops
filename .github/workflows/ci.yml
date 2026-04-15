@@ -52,7 +52,7 @@ jobs:
 
       # PARTIE 4 : Vérification de la politique de sécurité (Conftest)
       - name: Run Conftest check
-        uses: open-policy-agent/conftest-action@master
+        uses: open-policy-agent/conftest-action@v1
         with:
           files: k8s/deployment.yaml
           policy: policy/app_policy.rego
