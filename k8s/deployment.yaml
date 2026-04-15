@@ -13,6 +13,9 @@ spec:
       labels:
         app: flask
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
       containers:
         - name: flask-app
           image: flask-app:latest
